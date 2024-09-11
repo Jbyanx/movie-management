@@ -1,4 +1,4 @@
-package com.bycorp.moviemanagement.entities;
+package com.bycorp.moviemanagement.entity;
 
 import com.bycorp.moviemanagement.utils.MovieGenre;
 import jakarta.persistence.*;
