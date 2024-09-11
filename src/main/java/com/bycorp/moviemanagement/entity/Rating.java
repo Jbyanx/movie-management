@@ -1,4 +1,4 @@
-package com.bycorp.moviemanagement.entities;
+package com.bycorp.moviemanagement.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
