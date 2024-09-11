@@ -21,20 +21,32 @@ public class Rating {
     @ManyToOne
     @JoinColumn(
             name = "movie_id",
-            insertable = false,
-            updatable = false
+            insertable = false, //este campo no sirve para guardar
+            updatable = false   //este campo no sirve para actualizar
     )
     private Movie movie;
 
     @ManyToOne
     @JoinColumn(
             name = "user_id",
-            insertable = false,
-            updatable = false
+            insertable = false, //este campo no sirve para guardar
+            updatable = false   //este campo no sirve para actualizar
     )
     private User user;
 
     @Check(constraints = "rating >= 0 and rating <=5")
     @Column(nullable = false)
     private int rating;
+
+    @Column(
+            name = "movie_id",
+            nullable = false
+    )
+    private Long movieId;
+
+    @Column(
+            name = "user_id",
+            nullable = false
+    )
+    private Long userId;
 }
