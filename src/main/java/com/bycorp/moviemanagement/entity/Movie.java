@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "peliculas")
+@Table(name = "movies")
 @Getter
 @Setter
 @AllArgsConstructor
