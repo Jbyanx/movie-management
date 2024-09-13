@@ -4,10 +4,7 @@ import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,4 +22,10 @@ public class MovieController {
     public List<Movie> findAllMovies() {
         return movieService.findAll();
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{idPelicula}")
+    public Movie findMovieById(@PathVariable Long idPelicula) {
+        return movieService.findOneById(idPelicula);
+    }
+
 }
