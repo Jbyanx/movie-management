@@ -7,12 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController //combina @Controller y @ResponseBody
 @RequestMapping("/movies") //este controlador es accesible por localhost:puerto/path/movies
-@ResponseBody
 public class MovieController {
     private MovieService movieService;
 
