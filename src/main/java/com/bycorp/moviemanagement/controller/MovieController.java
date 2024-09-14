@@ -1,9 +1,13 @@
 package com.bycorp.moviemanagement.controller;
 
 import com.bycorp.moviemanagement.entity.Movie;
+import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.services.MovieService;
 import com.bycorp.moviemanagement.utils.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -21,25 +25,33 @@ public class MovieController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Movie> findAllMovies(
+    public ResponseEntity<List<Movie>> findAllMovies(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) MovieGenre genre
     ) {
-
+        List<Movie> movies = null;
         if(StringUtils.hasText(title) && genre != null) { //si hay titulo y hay genero
-            return movieService.findAllByTitleAndGenre(title, genre);
+            movies = movieService.findAllByTitleAndGenre(title, genre);
         }else if(StringUtils.hasText(title)) { //si hay titulo
-            return movieService.findAllByTitle(title);
+            movies = movieService.findAllByTitle(title);
         } else if(genre != null) { //si hay genero
-            return movieService.findAllByGenre(genre);
-        } //si no son hay filtros trae todos
-
-        return movieService.findAll();
+            movies = movieService.findAllByGenre(genre);
+        } else {//si no son hay filtros trae todos
+            movies = movieService.findAll();
+        }
+        //return new ResponseEntity<>(movies, HttpStatusCode.valueOf(200)); opc 1
+        //return ResponseEntity.status(HttpStatus.OK).body(movies); opc 2
+        return ResponseEntity.ok(movies);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{idPelicula}")
-    public Movie findMovieById(@PathVariable Long idPelicula) {
-        return movieService.findOneById(idPelicula);
+    public ResponseEntity<Movie> findMovieById(@PathVariable Long idPelicula) {
+        try{
+            return ResponseEntity.ok(movieService.findOneById(idPelicula));
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 }
