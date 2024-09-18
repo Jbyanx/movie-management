@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET) //cada metodo debe especificarse el verbo
+    @GetMapping
     public ResponseEntity<List<User>> findAllUsers(@RequestParam(required = false) String name){
         List<User> users = null;
 
@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}")
+    @GetMapping(value = "/{username}")
     public ResponseEntity<User> findByUsername(@PathVariable String username){
         try{
             return ResponseEntity.ok(userService.findByUsername(username));
@@ -43,7 +43,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user, HttpServletRequest request){
         User userCreated = userService.createOne(user);
         String baseUrl = request.getRequestURL().toString();
@@ -54,7 +54,7 @@ public class UserController {
                 .body(userCreated);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{username}")
+    @PutMapping(value = "/{username}")
     public ResponseEntity<User>  updateOneUser(@PathVariable String  username, @RequestBody User newUser){
         try{
 
@@ -67,7 +67,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{username}")
+    @DeleteMapping(value = "/{username}")
     public ResponseEntity<Void> deleteOneUser(@PathVariable String username){
         try{
             userService.deleteOneByUsername(username);
