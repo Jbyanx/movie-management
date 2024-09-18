@@ -79,4 +79,14 @@ public class MovieController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public ResponseEntity<Void> deleteOneMovieById(@PathVariable Long id) {
+        try{
+            movieService.deleteOneById(id);
+            return  ResponseEntity.noContent().build();
+        } catch (ObjectNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
