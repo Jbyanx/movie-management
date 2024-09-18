@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateOneById(Long id, User user) {
         User userBd = findOneById(id);
-        userBd.setUsername(user.getUsername());
+
         userBd.setPassword(user.getPassword());
         userBd.setName(user.getName());
         userBd.setRatings(user.getRatings());
