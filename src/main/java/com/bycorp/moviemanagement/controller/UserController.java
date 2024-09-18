@@ -47,7 +47,7 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user, HttpServletRequest request){
         User userCreated = userService.createOne(user);
         String baseUrl = request.getRequestURL().toString();
-        URI newLocation = URI.create(baseUrl + "/" + userCreated.getId());
+        URI newLocation = URI.create(baseUrl + "/" + userCreated.getUsername());
 
         return ResponseEntity
                 .created(newLocation)
