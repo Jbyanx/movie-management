@@ -27,7 +27,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<List<Movie>> findAllMovies(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) MovieGenre genre
@@ -47,7 +47,7 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{idPelicula}")
+    @GetMapping(value = "/{idPelicula}")
     public ResponseEntity<Movie> findMovieById(@PathVariable Long idPelicula) {
         try{
             return ResponseEntity.ok(movieService.findOneById(idPelicula));
@@ -57,7 +57,7 @@ public class MovieController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Movie> createOneMovie(@RequestBody Movie newMovie,
                                                 HttpServletRequest request) {
 
@@ -70,7 +70,7 @@ public class MovieController {
                 .body(movieCreated);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{idPelicula}")
+    @PutMapping(value = "/{idPelicula}")
     public ResponseEntity<Movie> updateOneMovieById(@PathVariable Long idPelicula, @RequestBody Movie newMovie) {
         try {
             Movie updatedMovie = movieService.updateOneById(idPelicula, newMovie);
@@ -80,7 +80,7 @@ public class MovieController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteOneMovieById(@PathVariable Long id) {
         try{
             movieService.deleteOneById(id);
