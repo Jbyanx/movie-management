@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController //combina @Controller y @ResponseBody
 @RequestMapping("/movies") //este controlador es accesible por localhost:puerto/path/movies
@@ -67,5 +68,15 @@ public class MovieController {
         return  ResponseEntity
                 .created(newLocation)
                 .body(movieCreated);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{idPelicula}")
+    public ResponseEntity<Movie> updateOneMovieById(@PathVariable Long idPelicula, @RequestBody Movie newMovie) {
+        try {
+            Movie updatedMovie = movieService.updateOneById(idPelicula, newMovie);
+            return ResponseEntity.ok(updatedMovie);
+        } catch(ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
