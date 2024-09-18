@@ -53,4 +53,27 @@ public class UserController {
                 .created(newLocation)
                 .body(userCreated);
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{username}")
+    public ResponseEntity<User>  updateOneUser(@PathVariable String  username, @RequestBody User newUser){
+        try{
+
+            User oldUser = userService.findByUsername(username);
+            return ResponseEntity.ok(userService.updateOneById(oldUser.getId(), newUser));
+
+        } catch (ObjectNotFoundException e){
+
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{username}")
+    public ResponseEntity<Void> deleteOneUser(@PathVariable String username){
+        try{
+            userService.deleteOneByUsername(username);
+            return ResponseEntity.noContent().build();
+        } catch (ObjectNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
