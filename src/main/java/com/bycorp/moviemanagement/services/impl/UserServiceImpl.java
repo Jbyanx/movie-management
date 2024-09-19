@@ -6,10 +6,12 @@ import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
@@ -18,22 +20,26 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly=true)
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly=true)
     @Override
     public List<User> findByNameContaining(String name) {
         return userRepository.findByNameContainingIgnoreCase(name);
     }
 
+    @Transactional(readOnly=true)
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException("Username: "+username+" not found"));
     }
 
+    @Transactional(readOnly=true)
     @Override
     public User findOneById(Long id) {
         return userRepository.findById(id)

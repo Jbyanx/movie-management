@@ -6,10 +6,12 @@ import com.bycorp.moviemanagement.repository.RatingRepository;
 import com.bycorp.moviemanagement.services.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class RatingServiceImpl implements RatingService {
     private RatingRepository ratingRepository;
 
@@ -18,21 +20,25 @@ public class RatingServiceImpl implements RatingService {
         this.ratingRepository = ratingRepository;
     }
 
+    @Transactional(readOnly=true)
     @Override
     public List<Rating> findAll() {
         return ratingRepository.findAll();
     }
 
+    @Transactional(readOnly=true)
     @Override
     public List<Rating> findRatingsByMovieId(Long movieId) {
         return ratingRepository.findRatingsByMovieId(movieId);
     }
 
+    @Transactional(readOnly=true)
     @Override
     public List<Rating> findRatingsByUserUsername(String user_username) {
         return ratingRepository.findRatingsByUserUsername(user_username);
     }
 
+    @Transactional(readOnly=true)
     @Override
     public Rating findOneById(Long id) {
         return ratingRepository.findById(id)
