@@ -1,11 +1,16 @@
 package com.bycorp.moviemanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,6 +22,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(
@@ -34,5 +40,12 @@ public class User {
             targetEntity = Rating.class,
             mappedBy = "user"
     )
+    @JsonManagedReference //esta lista de ratings sera serializada con normalidad
     private List<Rating> ratings;
+
+    @CreationTimestamp //genera de forma automatica esta vaina
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT NOW()")
+    @JsonProperty(value = "created-at")
+    @JsonFormat(pattern = "yyyy/MM/dd - HH:mm:ss")
+    private LocalDateTime createdAt;
 }

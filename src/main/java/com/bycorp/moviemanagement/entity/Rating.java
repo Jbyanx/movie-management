@@ -1,5 +1,8 @@
 package com.bycorp.moviemanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +19,7 @@ import org.hibernate.annotations.Check;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @ManyToOne
@@ -24,6 +28,7 @@ public class Rating {
             insertable = false, //este campo no sirve para guardar
             updatable = false   //este campo no sirve para actualizar
     )
+    @JsonIgnore
     private Movie movie;
 
     @ManyToOne
@@ -32,6 +37,8 @@ public class Rating {
             insertable = false, //este campo no sirve para guardar
             updatable = false   //este campo no sirve para actualizar
     )
+    //@JsonIgnore
+    @JsonBackReference
     private User user;
 
     @Check(constraints = "rating >= 0 and rating <=5")
@@ -42,11 +49,13 @@ public class Rating {
             name = "movie_id",
             nullable = false
     )
+    @JsonProperty(value = "movie-id")
     private Long movieId;
 
     @Column(
             name = "user_id",
             nullable = false
     )
+    @JsonProperty(value = "user-id")
     private Long userId;
 }
