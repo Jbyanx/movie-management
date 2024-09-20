@@ -28,7 +28,7 @@ public class Rating {
             insertable = false, //este campo no sirve para guardar
             updatable = false   //este campo no sirve para actualizar
     )
-    @JsonIgnore
+    @JsonBackReference("movie-to-rating")
     private Movie movie;
 
     @ManyToOne
@@ -37,8 +37,7 @@ public class Rating {
             insertable = false, //este campo no sirve para guardar
             updatable = false   //este campo no sirve para actualizar
     )
-    //@JsonIgnore
-    @JsonBackReference
+    @JsonBackReference("user-to-rating")
     private User user;
 
     @Check(constraints = "rating >= 0 and rating <=5")

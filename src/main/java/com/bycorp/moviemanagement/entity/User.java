@@ -40,7 +40,7 @@ public class User {
             targetEntity = Rating.class,
             mappedBy = "user"
     )
-    @JsonManagedReference //esta lista de ratings sera serializada con normalidad
+    @JsonManagedReference("user-to-rating") //esta lista de ratings sera serializada con normalidad
     private List<Rating> ratings;
 
     @CreationTimestamp //genera de forma automatica esta vaina
