@@ -19,7 +19,6 @@ import org.hibernate.annotations.Check;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @ManyToOne
@@ -28,7 +27,6 @@ public class Rating {
             insertable = false, //este campo no sirve para guardar
             updatable = false   //este campo no sirve para actualizar
     )
-    @JsonBackReference("movie-to-rating")
     private Movie movie;
 
     @ManyToOne
@@ -37,7 +35,6 @@ public class Rating {
             insertable = false, //este campo no sirve para guardar
             updatable = false   //este campo no sirve para actualizar
     )
-    @JsonBackReference("user-to-rating")
     private User user;
 
     @Check(constraints = "rating >= 0 and rating <=5")
@@ -48,13 +45,11 @@ public class Rating {
             name = "movie_id",
             nullable = false
     )
-    @JsonProperty(value = "movie-id")
     private Long movieId;
 
     @Column(
             name = "user_id",
             nullable = false
     )
-    @JsonProperty(value = "user-id")
     private Long userId;
 }

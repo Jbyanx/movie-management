@@ -40,12 +40,9 @@ public class User {
             targetEntity = Rating.class,
             mappedBy = "user"
     )
-    @JsonManagedReference("user-to-rating") //esta lista de ratings sera serializada con normalidad
     private List<Rating> ratings;
 
     @CreationTimestamp //genera de forma automatica esta vaina
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT NOW()")
-    @JsonProperty(value = "created-at")
-    @JsonFormat(pattern = "yyyy/MM/dd - HH:mm:ss")
     private LocalDateTime createdAt;
 }
