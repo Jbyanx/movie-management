@@ -1,16 +1,19 @@
 package com.bycorp.moviemanagement.services;
 
+import com.bycorp.moviemanagement.dto.request.SaveUser;
+import com.bycorp.moviemanagement.dto.response.GetUser;
 import com.bycorp.moviemanagement.entity.User;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> findAll();
-    List<User> findByNameContaining(String name);
-    User findByUsername(String username);
-    User findOneById(Long id);
-    User createOne(User user);
-    User updateOneById(Long id,User user);
+    List<GetUser> findAll();
+    List<GetUser> findByNameContaining(String name);
+    GetUser findByUsername(String username);
+    GetUser findOneById(Long id);
+    GetUser createOne(SaveUser userDto);
+    GetUser updateOneById(Long id,SaveUser userDto);
+    int updateByUsername(String username,SaveUser userDto);
     void deleteOneById(Long id);
     void deleteOneByUsername(String username);
 }

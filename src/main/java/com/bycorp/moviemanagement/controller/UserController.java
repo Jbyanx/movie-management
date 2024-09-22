@@ -1,5 +1,7 @@
 package com.bycorp.moviemanagement.controller;
 
+import com.bycorp.moviemanagement.dto.request.SaveUser;
+import com.bycorp.moviemanagement.dto.response.GetUser;
 import com.bycorp.moviemanagement.entity.User;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.services.UserService;
@@ -23,8 +25,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAllUsers(@RequestParam(required = false) String name){
-        List<User> users = null;
+    public ResponseEntity<List<GetUser>> findAllUsers(@RequestParam(required = false) String name){
+        List<GetUser> users = null;
 
         if(StringUtils.hasText(name)){
             users = userService.findByNameContaining(name);
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}")
-    public ResponseEntity<User> findByUsername(@PathVariable String username){
+    public ResponseEntity<GetUser> findByUsername(@PathVariable String username){
         try{
             return ResponseEntity.ok(userService.findByUsername(username));
         } catch (ObjectNotFoundException e){
@@ -44,10 +46,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user, HttpServletRequest request){
-        User userCreated = userService.createOne(user);
+    public ResponseEntity<GetUser> createUser(@RequestBody SaveUser userDto, HttpServletRequest request){
+        GetUser userCreated = userService.createOne(userDto);
         String baseUrl = request.getRequestURL().toString();
-        URI newLocation = URI.create(baseUrl + "/" + userCreated.getUsername());
+        URI newLocation = URI.create(baseUrl + "/" + userCreated.username());
 
         return ResponseEntity
                 .created(newLocation)
@@ -55,11 +57,11 @@ public class UserController {
     }
 
     @PutMapping(value = "/{username}")
-    public ResponseEntity<User>  updateOneUser(@PathVariable String  username, @RequestBody User newUser){
+    public ResponseEntity<Integer>  updateOneUser(@PathVariable String  username, @RequestBody SaveUser newUserDto){
         try{
 
-            User oldUser = userService.findByUsername(username);
-            return ResponseEntity.ok(userService.updateOneById(oldUser.getId(), newUser));
+            GetUser oldUser = userService.findByUsername(username);
+            return ResponseEntity.ok(userService.updateByUsername(username, newUserDto));
 
         } catch (ObjectNotFoundException e){
 

@@ -1,7 +1,10 @@
 package com.bycorp.moviemanagement.services.impl;
 
+import com.bycorp.moviemanagement.dto.request.SaveUser;
+import com.bycorp.moviemanagement.dto.response.GetUser;
 import com.bycorp.moviemanagement.entity.User;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
+import com.bycorp.moviemanagement.mapper.UserMapper;
 import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,44 +25,62 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly=true)
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<GetUser> findAll() {
+        return UserMapper.toGetDtoList(userRepository.findAll());
     }
 
     @Transactional(readOnly=true)
     @Override
-    public List<User> findByNameContaining(String name) {
-        return userRepository.findByNameContainingIgnoreCase(name);
+    public List<GetUser> findByNameContaining(String name) {
+        return UserMapper.toGetDtoList(userRepository.findByNameContainingIgnoreCase(name));
     }
 
     @Transactional(readOnly=true)
     @Override
-    public User findByUsername(String username) {
+    public GetUser findByUsername(String username) {
+        return UserMapper.toGetDto(this.findOneEntityByUsername(username));
+    }
+
+    @Transactional(readOnly=true)
+    public User findOneEntityByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException("Username: "+username+" not found"));
     }
 
     @Transactional(readOnly=true)
     @Override
-    public User findOneById(Long id) {
+    public GetUser findOneById(Long id) {
+        return UserMapper.toGetDto(this.findOneEntityById(id));
+    }
+
+    @Transactional(readOnly=true)
+    public User findOneEntityById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("User :"+id+" not found"));
     }
 
     @Override
-    public User createOne(User user) {
-        return userRepository.save(user);
+    public GetUser createOne(SaveUser userDto) {
+        User newUser = UserMapper.toEntity(userDto);
+        return UserMapper.toGetDto(userRepository.save(newUser));
     }
 
     @Override
-    public User updateOneById(Long id, User user) {
-        User userBd = findOneById(id);
+    public GetUser updateOneById(Long id, SaveUser userDto) {
+        User oldUser = this.findOneEntityById(id);
 
-        userBd.setPassword(user.getPassword());
-        userBd.setName(user.getName());
-        userBd.setRatings(user.getRatings());
+        UserMapper.updateEntity(oldUser, userDto);
 
-        return userRepository.save(userBd);
+        return UserMapper.toGetDto(userRepository.save(oldUser));
+    }
+
+    @Override
+    public int updateByUsername(String username, SaveUser userDto) {
+        User oldUser = this.findOneEntityByUsername(username);
+
+        UserMapper.updateEntity(oldUser, userDto);
+
+        return userRepository.updateByUsername(username, oldUser);
     }
 
     @Override

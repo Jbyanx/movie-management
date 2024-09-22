@@ -1,5 +1,7 @@
 package com.bycorp.moviemanagement.controller;
 
+import com.bycorp.moviemanagement.dto.request.SaveMovie;
+import com.bycorp.moviemanagement.dto.response.GetMovie;
 import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.services.MovieService;
@@ -28,11 +30,12 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Movie>> findAllMovies(
+    public ResponseEntity<List<GetMovie>> findAllMovies(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) MovieGenre genre
     ) {
-        List<Movie> movies = null;
+        List<GetMovie> movies = null;
+
         if(StringUtils.hasText(title) && genre != null) { //si hay titulo y hay genero
             movies = movieService.findAllByTitleAndGenre(title, genre);
         }else if(StringUtils.hasText(title)) { //si hay titulo
@@ -42,13 +45,12 @@ public class MovieController {
         } else {//si no son hay filtros trae todos
             movies = movieService.findAll();
         }
-        //return new ResponseEntity<>(movies, HttpStatusCode.valueOf(200)); opc 1
-        //return ResponseEntity.status(HttpStatus.OK).body(movies); opc 2
+
         return ResponseEntity.ok(movies);
     }
 
     @GetMapping(value = "/{idPelicula}")
-    public ResponseEntity<Movie> findMovieById(@PathVariable Long idPelicula) {
+    public ResponseEntity<GetMovie> findMovieById(@PathVariable Long idPelicula) {
         try{
             return ResponseEntity.ok(movieService.findOneById(idPelicula));
         } catch (ObjectNotFoundException e) {
@@ -58,12 +60,12 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createOneMovie(@RequestBody Movie newMovie,
+    public ResponseEntity<GetMovie> createOneMovie(@RequestBody SaveMovie movieDto,
                                                 HttpServletRequest request) {
 
-        Movie movieCreated = movieService.createOne(newMovie);
+        GetMovie movieCreated = movieService.createOne(movieDto);
         String baseUrl = request.getRequestURL().toString();
-        URI newLocation = URI.create(baseUrl+"/"+movieCreated.getId());
+        URI newLocation = URI.create(baseUrl+"/"+movieCreated.id());
 
         return  ResponseEntity
                 .created(newLocation)
@@ -71,9 +73,9 @@ public class MovieController {
     }
 
     @PutMapping(value = "/{idPelicula}")
-    public ResponseEntity<Movie> updateOneMovieById(@PathVariable Long idPelicula, @RequestBody Movie newMovie) {
+    public ResponseEntity<GetMovie> updateOneMovieById(@PathVariable Long idPelicula, @RequestBody SaveMovie movieDto) {
         try {
-            Movie updatedMovie = movieService.updateOneById(idPelicula, newMovie);
+            GetMovie updatedMovie = movieService.updateOneById(idPelicula, movieDto);
             return ResponseEntity.ok(updatedMovie);
         } catch(ObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
