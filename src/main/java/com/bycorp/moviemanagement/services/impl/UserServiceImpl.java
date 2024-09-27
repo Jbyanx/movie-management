@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly=true)
-    public User findOneEntityById(Long id) {
+    protected User findOneEntityById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("User :"+id+" not found"));
     }
