@@ -2,7 +2,6 @@ package com.bycorp.moviemanagement.controller;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
-import com.bycorp.moviemanagement.entity.User;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
