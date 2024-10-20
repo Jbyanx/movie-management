@@ -7,6 +7,7 @@ import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.mapper.UserMapper;
 import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
+import com.bycorp.moviemanagement.services.validator.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,21 +62,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUser createOne(SaveUser userDto) {
+        PasswordValidator.validatePassword(userDto.password(), userDto.passwordRepeated());
+
         User newUser = UserMapper.toEntity(userDto);
         return UserMapper.toGetDto(userRepository.save(newUser));
     }
 
     @Override
-    public GetUser updateOneById(Long id, SaveUser userDto) {
+    public GetUser updateOneById(Long id, SaveUser saveUserDto) {
+        PasswordValidator.validatePassword(saveUserDto.password(), saveUserDto.passwordRepeated());
+
         User oldUser = this.findOneEntityById(id);
 
-        UserMapper.updateEntity(oldUser, userDto);
+        UserMapper.updateEntity(oldUser, saveUserDto);
 
         return UserMapper.toGetDto(userRepository.save(oldUser));
     }
 
     @Override
     public int updateByUsername(String username, SaveUser userDto) {
+        PasswordValidator.validatePassword(userDto.password(), userDto.passwordRepeated());
+
         User oldUser = this.findOneEntityByUsername(username);
 
         UserMapper.updateEntity(oldUser, userDto);
