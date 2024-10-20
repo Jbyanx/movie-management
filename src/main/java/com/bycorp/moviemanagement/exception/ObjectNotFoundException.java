@@ -4,8 +4,8 @@ import lombok.Getter;
 
 public class ObjectNotFoundException extends RuntimeException{
     @Getter
-    private String objectName;
-    private String cause;
+    private final String objectName;
+    private final Throwable cause;
 
     public ObjectNotFoundException(String objectName) {
         this.objectName = objectName;
@@ -14,7 +14,7 @@ public class ObjectNotFoundException extends RuntimeException{
 
     public ObjectNotFoundException(String objectName, Throwable cause) {
         this.objectName = objectName;
-        this.cause = cause.toString();
+        this.cause = cause;
 
     }
 
