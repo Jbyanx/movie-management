@@ -3,7 +3,6 @@ package com.bycorp.moviemanagement.mapper;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
 import com.bycorp.moviemanagement.entity.Movie;
-import com.bycorp.moviemanagement.entity.Rating;
 
 import java.util.List;
 
