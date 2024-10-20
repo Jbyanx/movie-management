@@ -2,7 +2,6 @@ package com.bycorp.moviemanagement.services;
 
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
-import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.utils.MovieGenre;
 
 import java.util.List;
