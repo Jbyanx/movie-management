@@ -2,7 +2,6 @@ package com.bycorp.moviemanagement.services;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
-import com.bycorp.moviemanagement.entity.User;
 
 import java.util.List;
 
