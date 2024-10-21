@@ -38,11 +38,7 @@ public class UserController {
 
     @GetMapping(value = "/{username}")
     public ResponseEntity<GetUser> findByUsername(@PathVariable String username){
-        try{
-            return ResponseEntity.ok(userService.findByUsername(username));
-        } catch (ObjectNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(userService.findByUsername(username));
     }
 
     @PostMapping
