@@ -17,10 +17,6 @@ public record SaveMovie(
         @Min(value = 1900, message = "{generic.min}")
         @JsonProperty(value = "release_year")
         int releaseYear
-//        @JsonProperty(value = "availability_end_time")
-//        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//        @Future
-//        LocalDateTime availabilityEndTime
 ) implements Serializable {
 
 }

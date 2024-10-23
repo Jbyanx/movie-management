@@ -1,13 +1,16 @@
 package com.bycorp.moviemanagement.services.validator;
 
 import com.bycorp.moviemanagement.exception.InvalidPasswordException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 public class PasswordValidator {
 
     public static void validatePassword(String password, String confirmPassword) {
         if(!StringUtils.hasText(password) || !StringUtils.hasText(confirmPassword)) {
-            throw new IllegalArgumentException("Password and confirm password are required");
+            throw new IllegalArgumentException("password must contain data");
         }
 
         if(!password.equals(confirmPassword)) {

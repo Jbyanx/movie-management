@@ -9,8 +9,10 @@ import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
 import com.bycorp.moviemanagement.services.validator.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
