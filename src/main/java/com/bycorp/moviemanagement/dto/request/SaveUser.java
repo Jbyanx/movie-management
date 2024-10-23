@@ -19,6 +19,7 @@ public record SaveUser(
         String password,
         @JsonProperty(value = "password_repeated")
         @NotBlank(message = "{generic.notBlank}")
-        @Size(min = 10, max = 255, message = "{generic.size}") String passwordRepeated
+        @Size(min = 10, max = 255, message = "{generic.size}")
+        String passwordRepeated
 ) implements Serializable {
 }
