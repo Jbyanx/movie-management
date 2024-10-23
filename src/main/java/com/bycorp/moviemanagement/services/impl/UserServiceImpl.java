@@ -47,8 +47,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly=true)
     public User findOneEntityByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow( () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "username "+username+" not found"));
-                //.orElseThrow(() -> new ObjectNotFoundException("Username: "+username+" not found"));
+                .orElseThrow(() -> new ObjectNotFoundException("Username: "+username+" not found"));
     }
 
     @Transactional(readOnly=true)
