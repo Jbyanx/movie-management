@@ -1,18 +1,19 @@
 package com.bycorp.moviemanagement.services.impl;
 
+import com.bycorp.moviemanagement.dto.request.MovieSearchCriteria;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
 import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.mapper.MovieMapper;
 import com.bycorp.moviemanagement.repository.MovieRepository;
+import com.bycorp.moviemanagement.repository.specification.FindAllMoviesSpecification;
 import com.bycorp.moviemanagement.services.MovieService;
-import com.bycorp.moviemanagement.utils.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,26 +29,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional(readOnly=true)
     @Override
-    public List<GetMovie> findAll() {
-        return MovieMapper.toGetDtoList(movieRepository.findAll());
-    }
+    public Page<GetMovie> findAll(MovieSearchCriteria movieSearchCriteria, Pageable pageable) {
+        FindAllMoviesSpecification moviesSpecification = new FindAllMoviesSpecification(movieSearchCriteria);
 
-    @Transactional(readOnly=true)
-    @Override
-    public List<GetMovie> findAllByTitle(String title) {
-        return MovieMapper.toGetDtoList(movieRepository.findByTitleContaining(title));
-    }
+        Page<Movie> entities = movieRepository.findAll(moviesSpecification, pageable);
 
-    @Transactional(readOnly=true)
-    @Override
-    public List<GetMovie> findAllByGenre(MovieGenre genre) {
-        return MovieMapper.toGetDtoList(movieRepository.findByGenre(genre));
-    }
-
-    @Transactional(readOnly=true)
-    @Override
-    public List<GetMovie> findAllByTitleAndGenre(String title, MovieGenre genre) {
-        return MovieMapper.toGetDtoList(movieRepository.findByTitleContainingAndGenre(title, genre));
+        return entities.map(MovieMapper::toGetDto);
     }
 
     @Transactional(readOnly=true)

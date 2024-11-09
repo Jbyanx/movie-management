@@ -1,16 +1,13 @@
 package com.bycorp.moviemanagement.services;
 
+import com.bycorp.moviemanagement.dto.request.MovieSearchCriteria;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
-import com.bycorp.moviemanagement.utils.MovieGenre;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface MovieService {
-    List<GetMovie> findAll();
-    List<GetMovie> findAllByTitle(String title);
-    List<GetMovie> findAllByGenre(MovieGenre genre);
-    List<GetMovie> findAllByTitleAndGenre(String title, MovieGenre genre);
+    Page<GetMovie> findAll(MovieSearchCriteria movieSearchCriteria, Pageable pageable);
     GetMovie findOneById(Long id);
     GetMovie createOne(SaveMovie movieDto);
     GetMovie updateOneById(Long id,SaveMovie movieDto);

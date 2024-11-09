@@ -1,5 +1,6 @@
 package com.bycorp.moviemanagement.controller;
 
+import com.bycorp.moviemanagement.dto.request.MovieSearchCriteria;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.ApiError;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
@@ -12,6 +13,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -37,23 +42,25 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetMovie>> findAllMovies(
+    public ResponseEntity<Page<GetMovie>> findAllMovies(
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) MovieGenre genre
+            @RequestParam(required = false) MovieGenre genre,
+            @RequestParam(required = false, name = "min_release_year") Integer minReleaseYear,
+            @RequestParam(required = false, name = "max_release_year") Integer maxReleaseYear,
+            @RequestParam(required = false, name = "min_average_rating") Integer minAverageRating,
+            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false, defaultValue = "id") String sortBy
     ) {
-        List<GetMovie> movies = null;
+        Sort movieSort = Sort.by(sortBy.trim());
 
-        if(StringUtils.hasText(title) && genre != null) { //si hay titulo y hay genero
-            movies = movieService.findAllByTitleAndGenre(title, genre);
-        }else if(StringUtils.hasText(title)) { //si hay titulo
-            movies = movieService.findAllByTitle(title);
-        } else if(genre != null) { //si hay genero
-            movies = movieService.findAllByGenre(genre);
-        } else {//si no son hay filtros trae todos
-            movies = movieService.findAll();
-        }
+        Pageable moviePageable = PageRequest.of(pageNumber, pageSize, movieSort);
 
-        return ResponseEntity.ok(movies);
+        MovieSearchCriteria searchCriteria = new MovieSearchCriteria(title,genre,minReleaseYear,maxReleaseYear,minAverageRating);
+
+        Page<GetMovie> getMovies = movieService.findAll(searchCriteria, moviePageable);
+
+        return ResponseEntity.ok(getMovies);
     }
 
     @GetMapping(value = "/{idPelicula}")
