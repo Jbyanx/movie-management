@@ -7,6 +7,7 @@ public record MovieSearchCriteria(
         MovieGenre genre,
         Integer minReleaseYear,
         Integer maxReleaseYear,
-        Integer minAverageRating
+        Integer minAverageRating,
+        String username
 ) {
 }
