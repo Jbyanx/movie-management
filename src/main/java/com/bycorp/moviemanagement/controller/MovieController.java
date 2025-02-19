@@ -48,15 +48,10 @@ public class MovieController {
             @RequestParam(required = false, name = "min_release_year") Integer minReleaseYear,
             @RequestParam(required = false, name = "max_release_year") Integer maxReleaseYear,
             @RequestParam(required = false, name = "min_average_rating") Integer minAverageRating,
-            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false, defaultValue = "id") String sortBy
+            @RequestParam(required = false, name = "username") String  username,
+            Pageable moviePageable
     ) {
-        Sort movieSort = Sort.by(sortBy.trim());
-
-        Pageable moviePageable = PageRequest.of(pageNumber, pageSize, movieSort);
-
-        MovieSearchCriteria searchCriteria = new MovieSearchCriteria(title,genre,minReleaseYear,maxReleaseYear,minAverageRating);
+        MovieSearchCriteria searchCriteria = new MovieSearchCriteria(title,genre,minReleaseYear,maxReleaseYear,minAverageRating, username);
 
         Page<GetMovie> getMovies = movieService.findAll(searchCriteria, moviePageable);
 
