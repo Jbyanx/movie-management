@@ -8,13 +8,18 @@ import com.bycorp.moviemanagement.mapper.UserMapper;
 import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
 import com.bycorp.moviemanagement.services.validator.PasswordValidator;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,19 +33,26 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly=true)
     @Override
-    public List<GetUser> findAll() {
-        return UserMapper.toGetDtoList(userRepository.findAll());
-    }
+    public Page<GetUser> findAll(String name, Pageable pageable) {
 
-    @Transactional(readOnly=true)
-    @Override
-    public List<GetUser> findByNameContaining(String name) {
-        return UserMapper.toGetDtoList(userRepository.findByNameContainingIgnoreCase(name));
+        Specification<User> userSpecification = (root, query, builder) -> {
+            if(StringUtils.hasText(name)) {
+                Predicate nameLike = builder.like(root.get("name"), "%" + name + "%");
+                return nameLike;
+            }
+            return null; //no mas predicados
+        };
+
+        Page<User> userPage = userRepository.findAll(name, pageable);
+
+        return userPage.map(UserMapper::toGetDto);
     }
 
     @Transactional(readOnly=true)
     @Override
     public GetUser findByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow();
         return UserMapper.toGetDto(this.findOneEntityByUsername(username));
     }
 
@@ -82,7 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateByUsername(String username, SaveUser userDto) {
+    public Integer updateByUsername(String username, SaveUser userDto) {
         PasswordValidator.validatePassword(userDto.password(), userDto.passwordRepeated());
 
         User oldUser = this.findOneEntityByUsername(username);

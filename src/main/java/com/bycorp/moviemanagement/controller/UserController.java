@@ -2,11 +2,12 @@ package com.bycorp.moviemanagement.controller;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
-import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +26,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetUser>> findAllUsers(@RequestParam(required = false) String name){
-        List<GetUser> users = null;
+    public ResponseEntity<Page<GetUser>> findAllUsers(@RequestParam(required = false) String name, Pageable pageable){
+        Page<GetUser> users = null;
 
-        if(StringUtils.hasText(name)){
-            users = userService.findByNameContaining(name);
-        }else {
-            users = userService.findAll();
-        }
+        users = userService.findAll(name,pageable);
+
         return ResponseEntity.ok(users);
     }
 

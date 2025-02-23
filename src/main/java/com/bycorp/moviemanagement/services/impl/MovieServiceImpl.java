@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class MovieServiceImpl implements MovieService {
@@ -35,11 +37,14 @@ public class MovieServiceImpl implements MovieService {
         return entities.map(MovieMapper::toGetDto);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     @Override
     public GetMovie findOneById(Long id) {
-        return MovieMapper.toGetDto(this.findOneEntityById(id));
+        return movieRepository.findById(id)
+                .map(MovieMapper::toGetDto)
+                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
     }
+
 
     @Transactional(readOnly=true)
     protected Movie findOneEntityById(Long id) {
