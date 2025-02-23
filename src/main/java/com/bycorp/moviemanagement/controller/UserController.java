@@ -29,11 +29,8 @@ public class UserController {
     public ResponseEntity<Page<GetUser>> findAllUsers(@RequestParam(required = false) String name, Pageable pageable){
         Page<GetUser> users = null;
 
-        if(StringUtils.hasText(name)){
-            users = userService.findByNameContaining(name, pageable);
-        }else {
-            users = userService.findAll(pageable);
-        }
+        users = userService.findAll(name,pageable);
+
         return ResponseEntity.ok(users);
     }
 
