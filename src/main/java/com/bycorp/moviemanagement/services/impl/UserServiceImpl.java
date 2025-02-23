@@ -9,12 +9,13 @@ import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
 import com.bycorp.moviemanagement.services.validator.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,19 +29,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly=true)
     @Override
-    public List<GetUser> findAll() {
-        return UserMapper.toGetDtoList(userRepository.findAll());
+    public Page<GetUser> findAll(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.map(UserMapper::toGetDto);
     }
 
     @Transactional(readOnly=true)
     @Override
-    public List<GetUser> findByNameContaining(String name) {
-        return UserMapper.toGetDtoList(userRepository.findByNameContainingIgnoreCase(name));
+    public Page<GetUser> findByNameContaining(String name, Pageable pageable) {
+        Page<User> userPage = userRepository.findByNameContainingIgnoreCase(name);
+        return userPage.map(UserMapper::toGetDto);
     }
 
     @Transactional(readOnly=true)
     @Override
     public GetUser findByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow();
         return UserMapper.toGetDto(this.findOneEntityByUsername(username));
     }
 
@@ -82,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateByUsername(String username, SaveUser userDto) {
+    public Integer updateByUsername(String username, SaveUser userDto) {
         PasswordValidator.validatePassword(userDto.password(), userDto.passwordRepeated());
 
         User oldUser = this.findOneEntityByUsername(username);
