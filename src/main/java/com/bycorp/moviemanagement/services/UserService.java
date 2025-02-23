@@ -8,8 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface UserService {
-    Page<GetUser> findAll(Pageable pageable);
-    Page<GetUser> findByNameContaining(String name, Pageable pageable);
+    Page<GetUser> findAll(String name, Pageable pageable);
     GetUser findByUsername(String username);
     GetUser findOneById(Long id);
     GetUser createOne(SaveUser userDto);
