@@ -8,11 +8,15 @@ import com.bycorp.moviemanagement.mapper.UserMapper;
 import com.bycorp.moviemanagement.repository.UserRepository;
 import com.bycorp.moviemanagement.services.UserService;
 import com.bycorp.moviemanagement.services.validator.PasswordValidator;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,15 +33,18 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly=true)
     @Override
-    public Page<GetUser> findAll(Pageable pageable) {
-        Page<User> userPage = userRepository.findAll(pageable);
-        return userPage.map(UserMapper::toGetDto);
-    }
+    public Page<GetUser> findAll(String name, Pageable pageable) {
 
-    @Transactional(readOnly=true)
-    @Override
-    public Page<GetUser> findByNameContaining(String name, Pageable pageable) {
-        Page<User> userPage = userRepository.findByNameContainingIgnoreCase(name);
+        Specification<User> userSpecification = (root, query, builder) -> {
+            if(StringUtils.hasText(name)) {
+                Predicate nameLike = builder.like(root.get("name"), "%" + name + "%");
+                return nameLike;
+            }
+            return null; //no mas predicados
+        };
+
+        Page<User> userPage = userRepository.findAll(name, pageable);
+
         return userPage.map(UserMapper::toGetDto);
     }
 
