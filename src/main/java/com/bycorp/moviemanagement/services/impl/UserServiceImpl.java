@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
             return null; //no mas predicados
         };
 
-        Page<User> userPage = userRepository.findAll(name, pageable);
+        Page<User> userPage = userRepository.findAll(userSpecification, pageable);
 
         return userPage.map(UserMapper::toGetDto);
     }
