@@ -11,8 +11,9 @@ public record GetMovie(
         String title,
         String director,
         MovieGenre genre,
-        @JsonProperty(value = "release_year") int releaseYear
-        //List<GetRating> ratings
+        @JsonProperty(value = "release_year") int releaseYear,
+        @JsonProperty("total_ratings")
+        int totalRatings
 ) implements Serializable {
 
     public static record GetRating(
