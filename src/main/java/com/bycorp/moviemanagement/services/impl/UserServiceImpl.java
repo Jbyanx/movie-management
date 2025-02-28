@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly=true)
+    @Override
     public User findOneEntityByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException("Username: "+username+" not found"));
@@ -69,7 +70,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly=true)
-    protected User findOneEntityById(Long id) {
+    @Override
+    public User findOneEntityById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("User :"+id+" not found"));
     }
