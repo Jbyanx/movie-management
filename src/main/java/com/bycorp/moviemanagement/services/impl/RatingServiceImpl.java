@@ -2,6 +2,7 @@ package com.bycorp.moviemanagement.services.impl;
 
 import com.bycorp.moviemanagement.dto.request.SaveRating;
 import com.bycorp.moviemanagement.dto.response.GetCompleteRating;
+import com.bycorp.moviemanagement.dto.response.GetMovie;
 import com.bycorp.moviemanagement.entity.Rating;
 import com.bycorp.moviemanagement.entity.User;
 import com.bycorp.moviemanagement.exception.DuplicateRatingException;
@@ -41,9 +42,9 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional(readOnly=true)
     @Override
-    public Page<GetCompleteRating> findRatingsByMovieId(Long movieId, Pageable pageable) {
+    public Page<GetMovie.GetRating> findRatingsByMovieId(Long movieId, Pageable pageable) {
         return ratingRepository.findRatingsByMovieId(movieId, pageable)
-                .map(RatingMapper::toGetCompleteRatingDto);
+                .map(RatingMapper::toGetMovieRatingDto);
     }
 
     @Transactional(readOnly=true)
