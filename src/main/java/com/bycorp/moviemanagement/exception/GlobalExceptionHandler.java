@@ -30,6 +30,7 @@ public class GlobalExceptionHandler {
             HttpRequestMethodNotSupportedException.class, //el metodo no esta soportado
             HttpMediaTypeNotSupportedException.class, //el tipo de medios enviado no lo soporta la aplicacion
             HttpMessageNotReadableException.class, //el medio enviado no se sabe que vaina es
+            DuplicateRatingException.class, //usuario ya califico esa pelicula
             Exception.class
     })
     public ResponseEntity<ApiError> handleAllExceptions(Exception exception,
@@ -59,6 +60,8 @@ public class GlobalExceptionHandler {
         }else if(exception instanceof HttpMessageNotReadableException httpMessageNotReadableException){
             return this.handleHttpMessageNotReadableException(httpMessageNotReadableException, request, response, timestamp);
 
+        }else if(exception instanceof DuplicateRatingException duplicateRatingException) {
+            return this.handleDuplicateRatingException(duplicateRatingException, request, response, timestamp);
         }else {
             return this.handleGenericException(exception, request, response, timestamp);
         }
@@ -224,5 +227,19 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(status).body(apiError);
+    }
+
+    public ResponseEntity<ApiError> handleDuplicateRatingException(DuplicateRatingException duplicateRatingException, HttpServletRequest request, HttpServletResponse response, LocalDateTime timestamp){
+        ApiError apiError = new ApiError(
+                HttpStatus.CONFLICT.value(),
+                request.getRequestURL().toString(),
+                request.getMethod(),
+                duplicateRatingException.getMessage(),
+                duplicateRatingException.getMessage(),
+                timestamp,
+                null
+        );
+
+        return ResponseEntity.badRequest().body(apiError);
     }
 }
