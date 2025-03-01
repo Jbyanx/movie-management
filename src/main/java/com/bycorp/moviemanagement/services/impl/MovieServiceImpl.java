@@ -3,6 +3,7 @@ package com.bycorp.moviemanagement.services.impl;
 import com.bycorp.moviemanagement.dto.request.MovieSearchCriteria;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
+import com.bycorp.moviemanagement.dto.response.GetMovieStatistic;
 import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.mapper.MovieMapper;
@@ -14,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -39,10 +38,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetMovie findOneById(Long id) {
+    public GetMovieStatistic findOneById(Long id) {
         return movieRepository.findById(id)
-                .map(MovieMapper::toGetDto)
-                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+                .map(MovieMapper::toGetStatisticDto)
+                .orElseThrow(() -> new ObjectNotFoundException("Película no encontrada"));
     }
 
 
