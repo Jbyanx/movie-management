@@ -7,6 +7,7 @@ import com.bycorp.moviemanagement.dto.response.GetMovie;
 import com.bycorp.moviemanagement.exception.InvalidPasswordException;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.services.MovieService;
+import com.bycorp.moviemanagement.services.RatingService;
 import com.bycorp.moviemanagement.utils.MovieGenre;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,11 +35,13 @@ import java.util.List;
 @RestController //combina @Controller y @ResponseBody
 @RequestMapping("/movies") //este controlador es accesible por localhost:puerto/path/movies
 public class MovieController {
+    private final RatingService ratingService;
     private MovieService movieService;
 
     @Autowired
-    public MovieController(MovieService movieService) {
+    public MovieController(MovieService movieService, RatingService ratingService) {
         this.movieService = movieService;
+        this.ratingService = ratingService;
     }
 
     @GetMapping
@@ -61,6 +64,11 @@ public class MovieController {
     @GetMapping(value = "/{idPelicula}")
     public ResponseEntity<GetMovie> findMovieById(@PathVariable Long idPelicula) {
         return ResponseEntity.ok(movieService.findOneById(idPelicula));
+    }
+
+    @GetMapping("/{idPelicula}/ratings")
+    public ResponseEntity<Page<GetMovie.GetRating>> findAllRatingsforMovieId(@PathVariable Long idPelicula, Pageable pageable) {
+        return ResponseEntity.ok(ratingService.findRatingsByMovieId(idPelicula, pageable));
     }
 
     @PostMapping

@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.hibernate.annotations.Check;
 
 @Entity
-@Table(name = "ratings")
+@Table(
+        name = "ratings",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"movie_id","user_id"})
+) //la anotacion @Table entiende en terminos de sql a los nombres de los parametros
 @Getter
 @Setter
 @AllArgsConstructor
