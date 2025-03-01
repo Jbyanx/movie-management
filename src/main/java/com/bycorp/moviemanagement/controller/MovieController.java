@@ -9,7 +9,6 @@ import com.bycorp.moviemanagement.services.RatingService;
 import com.bycorp.moviemanagement.utils.MovieGenre;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +20,8 @@ import java.net.URI;
 @RequestMapping("/movies") //este controlador es accesible por localhost:puerto/path/movies
 public class MovieController {
     private final RatingService ratingService;
-    private MovieService movieService;
+    private final MovieService movieService;
 
-    @Autowired
     public MovieController(MovieService movieService, RatingService ratingService) {
         this.movieService = movieService;
         this.ratingService = ratingService;

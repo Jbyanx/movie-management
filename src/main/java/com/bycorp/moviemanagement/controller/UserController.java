@@ -7,7 +7,6 @@ import com.bycorp.moviemanagement.services.RatingService;
 import com.bycorp.moviemanagement.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +18,8 @@ import java.net.URI;
 @RequestMapping("/users")
 public class UserController {
     private final RatingService ratingService;
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService, RatingService ratingService) {
         this.userService = userService;
         this.ratingService = ratingService;

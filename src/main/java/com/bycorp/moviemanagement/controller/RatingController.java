@@ -5,7 +5,6 @@ import com.bycorp.moviemanagement.dto.response.GetCompleteRating;
 import com.bycorp.moviemanagement.services.RatingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/ratings")
 public class RatingController {
-    @Autowired
-    private RatingService ratingService;
+
+    private final RatingService ratingService;
+
+    public RatingController(RatingService ratingService) {
+        this.ratingService = ratingService;
+    }
 
     @GetMapping
     public ResponseEntity<Page<GetCompleteRating>> getAllRatings(Pageable pageable) {
