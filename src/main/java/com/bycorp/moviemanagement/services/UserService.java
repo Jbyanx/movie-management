@@ -2,6 +2,7 @@ package com.bycorp.moviemanagement.services;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
+import com.bycorp.moviemanagement.dto.response.GetUserStatistic;
 import com.bycorp.moviemanagement.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +15,10 @@ public interface UserService {
      * @throws {@link com.bycorp.moviemanagement.exception.ObjectNotFoundException} si no encuentra el username en bbdd
      * @return
      */
-    GetUser findByUsername(String username);
-    GetUser findOneById(Long id);
+    GetUserStatistic findByUsername(String username);
+
+    GetUserStatistic findOneById(Long id);
+
     User findOneEntityById(Long id);
     /**
      * @param username
