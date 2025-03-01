@@ -2,27 +2,24 @@ package com.bycorp.moviemanagement.controller;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
+import com.bycorp.moviemanagement.dto.response.GetUserStatistic;
 import com.bycorp.moviemanagement.services.RatingService;
 import com.bycorp.moviemanagement.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     private final RatingService ratingService;
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService, RatingService ratingService) {
         this.userService = userService;
         this.ratingService = ratingService;
@@ -38,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}")
-    public ResponseEntity<GetUser> findByUsername(@PathVariable String username){
+    public ResponseEntity<GetUserStatistic> findByUsername(@PathVariable String username){
         return ResponseEntity.ok(userService.findByUsername(username));
     }
 
@@ -60,7 +57,7 @@ public class UserController {
 
     @PutMapping(value = "/{username}")
     public ResponseEntity<Integer>  updateOneUser(@PathVariable String  username, @RequestBody @Valid SaveUser newUserDto){
-        GetUser oldUser = userService.findByUsername(username);
+        GetUserStatistic oldUser = userService.findByUsername(username);
         return ResponseEntity.ok(userService.updateByUsername(username, newUserDto));
     }
 

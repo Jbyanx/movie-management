@@ -2,7 +2,9 @@ package com.bycorp.moviemanagement.mapper;
 
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
+import com.bycorp.moviemanagement.dto.response.GetMovieStatistic;
 import com.bycorp.moviemanagement.entity.Movie;
+import com.bycorp.moviemanagement.entity.Rating;
 
 import java.util.List;
 
@@ -48,5 +50,23 @@ public class MovieMapper {
         oldMovie.setGenre(movieDto.genre());
         oldMovie.setDirector(movieDto.director());
         oldMovie.setReleaseYear(movieDto.releaseYear());
+    }
+
+    public static GetMovieStatistic toGetStatisticDto(
+            Movie movie, int totalRatings, double averageRating, int lowestRating, int highestRating
+    ) {
+        if(movie == null) return null;
+
+        return new GetMovieStatistic(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getDirector(),
+                movie.getGenre().name(),
+                totalRatings,
+                movie.getReleaseYear(),
+                averageRating,
+                lowestRating,
+                highestRating
+        );
     }
 }
