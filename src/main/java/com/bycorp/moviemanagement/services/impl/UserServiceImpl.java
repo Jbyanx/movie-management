@@ -2,6 +2,7 @@ package com.bycorp.moviemanagement.services.impl;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
+import com.bycorp.moviemanagement.dto.response.GetUserStatistic;
 import com.bycorp.moviemanagement.entity.User;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.mapper.UserMapper;
@@ -46,10 +47,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly=true)
     @Override
-    public GetUser findByUsername(String username) {
+    public GetUserStatistic findByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow();
-        return UserMapper.toGetDto(this.findOneEntityByUsername(username));
+        return UserMapper.toGetStatisticDto(this.findOneEntityByUsername(username));
     }
 
     @Transactional(readOnly=true)
@@ -61,8 +62,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly=true)
     @Override
-    public GetUser findOneById(Long id) {
-        return UserMapper.toGetDto(this.findOneEntityById(id));
+    public GetUserStatistic findOneById(Long id) {
+        return UserMapper.toGetStatisticDto(this.findOneEntityById(id));
     }
 
     @Transactional(readOnly=true)
