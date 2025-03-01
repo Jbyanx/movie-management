@@ -3,7 +3,6 @@ package com.bycorp.moviemanagement.mapper;
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
 import com.bycorp.moviemanagement.dto.response.GetUserStatistic;
-import com.bycorp.moviemanagement.entity.Rating;
 import com.bycorp.moviemanagement.entity.User;
 
 import java.util.List;
@@ -48,32 +47,10 @@ public class UserMapper {
         oldUser.setPassword(userDto.password());
     }
 
-    public static GetUserStatistic toGetStatisticDto(User entity) {
+    public static GetUserStatistic toGetStatisticDto(
+            User entity, int totalRatings, double averageRating, int lowestRating, int highestRating
+    ) {
         if(entity == null) return null;
-
-        int totalRatings = entity.getRatings() != null ? entity.getRatings().size() : 0;
-
-        int sumaRatings = entity.getRatings() != null ?
-                entity.getRatings().stream()
-                        .mapToInt(Rating::getRating)
-                        .sum()
-                : 0;
-
-        double averageRating = entity.getRatings() != null ? (double) sumaRatings / totalRatings : 0;
-
-        int lowestRating = entity.getRatings() != null ?
-                entity.getRatings().stream()
-                        .mapToInt(Rating::getRating)
-                        .min()
-                        .orElse(0)
-                : 0;
-
-        int highestRating = entity.getRatings() != null ?
-                entity.getRatings().stream()
-                        .mapToInt(Rating::getRating)
-                        .max()
-                        .orElse(0)
-                : 0;
 
         return new GetUserStatistic(
                 entity.getUsername(),
