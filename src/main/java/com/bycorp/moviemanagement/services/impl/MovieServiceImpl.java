@@ -3,13 +3,14 @@ package com.bycorp.moviemanagement.services.impl;
 import com.bycorp.moviemanagement.dto.request.MovieSearchCriteria;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
+import com.bycorp.moviemanagement.dto.response.GetMovieStatistic;
 import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.mapper.MovieMapper;
 import com.bycorp.moviemanagement.repository.MovieRepository;
+import com.bycorp.moviemanagement.repository.RatingRepository;
 import com.bycorp.moviemanagement.repository.specification.FindAllMoviesSpecification;
 import com.bycorp.moviemanagement.services.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,12 @@ import java.util.Optional;
 @Service
 @Transactional
 public class MovieServiceImpl implements MovieService {
-    private MovieRepository movieRepository;
+    private final RatingRepository ratingRepository;
+    private final MovieRepository movieRepository;
 
-    @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, RatingRepository ratingRepository) {
         this.movieRepository = movieRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Transactional(readOnly=true)
@@ -39,10 +41,21 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetMovie findOneById(Long id) {
+    public GetMovieStatistic findOneById(Long id) {
+        int totalRatings = Optional.ofNullable(ratingRepository.countByMovieId(id)).orElse(0);
+        double averageRating = Optional.ofNullable(ratingRepository.avgRatingByMovieId(id)).orElse(0.0);
+        int lowestRating = Optional.ofNullable(ratingRepository.minRatingByMovieId(id)).orElse(0);
+        int highestRating = Optional.ofNullable(ratingRepository.maxRatingByMovieId(id)).orElse(0);
+
         return movieRepository.findById(id)
-                .map(MovieMapper::toGetDto)
-                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+                .map(m -> MovieMapper.toGetStatisticDto(
+                        m,
+                        totalRatings,
+                        averageRating,
+                        lowestRating,
+                        highestRating
+                ))
+                .orElseThrow(() -> new ObjectNotFoundException("Película no encontrada, error al buscar esa pelicula"));
     }
 
 

@@ -2,43 +2,26 @@ package com.bycorp.moviemanagement.controller;
 
 import com.bycorp.moviemanagement.dto.request.MovieSearchCriteria;
 import com.bycorp.moviemanagement.dto.request.SaveMovie;
-import com.bycorp.moviemanagement.dto.response.ApiError;
 import com.bycorp.moviemanagement.dto.response.GetMovie;
-import com.bycorp.moviemanagement.exception.InvalidPasswordException;
-import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
+import com.bycorp.moviemanagement.dto.response.GetMovieStatistic;
 import com.bycorp.moviemanagement.services.MovieService;
 import com.bycorp.moviemanagement.services.RatingService;
 import com.bycorp.moviemanagement.utils.MovieGenre;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
 
 @RestController //combina @Controller y @ResponseBody
 @RequestMapping("/movies") //este controlador es accesible por localhost:puerto/path/movies
 public class MovieController {
     private final RatingService ratingService;
-    private MovieService movieService;
+    private final MovieService movieService;
 
-    @Autowired
     public MovieController(MovieService movieService, RatingService ratingService) {
         this.movieService = movieService;
         this.ratingService = ratingService;
@@ -62,7 +45,7 @@ public class MovieController {
     }
 
     @GetMapping(value = "/{idPelicula}")
-    public ResponseEntity<GetMovie> findMovieById(@PathVariable Long idPelicula) {
+    public ResponseEntity<GetMovieStatistic> findMovieById(@PathVariable Long idPelicula) {
         return ResponseEntity.ok(movieService.findOneById(idPelicula));
     }
 

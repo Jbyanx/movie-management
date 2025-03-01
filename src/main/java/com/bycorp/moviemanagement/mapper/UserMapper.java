@@ -2,6 +2,7 @@ package com.bycorp.moviemanagement.mapper;
 
 import com.bycorp.moviemanagement.dto.request.SaveUser;
 import com.bycorp.moviemanagement.dto.response.GetUser;
+import com.bycorp.moviemanagement.dto.response.GetUserStatistic;
 import com.bycorp.moviemanagement.entity.User;
 
 import java.util.List;
@@ -44,5 +45,20 @@ public class UserMapper {
 
         oldUser.setName(userDto.name());
         oldUser.setPassword(userDto.password());
+    }
+
+    public static GetUserStatistic toGetStatisticDto(
+            User entity, int totalRatings, double averageRating, int lowestRating, int highestRating
+    ) {
+        if(entity == null) return null;
+
+        return new GetUserStatistic(
+                entity.getUsername(),
+                entity.getCreatedAt(),
+                totalRatings,
+                averageRating,
+                lowestRating,
+                highestRating
+        );
     }
 }
