@@ -11,10 +11,12 @@ public class UserMapper {
     public static GetUser toGetDto(User entity) {
         if(entity == null) return null;
 
+        int totalRatedMovies = entity.getRatings() != null ? entity.getRatings().size() : 0;
+
         return new GetUser(
                 entity.getUsername(),
                 entity.getName(),
-                RatingMapper.toGetUserRatingDtoList(entity.getRatings())
+                totalRatedMovies
         );
     }
 
