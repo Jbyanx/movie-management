@@ -8,22 +8,25 @@ import com.bycorp.moviemanagement.entity.Movie;
 import com.bycorp.moviemanagement.exception.ObjectNotFoundException;
 import com.bycorp.moviemanagement.mapper.MovieMapper;
 import com.bycorp.moviemanagement.repository.MovieRepository;
+import com.bycorp.moviemanagement.repository.RatingRepository;
 import com.bycorp.moviemanagement.repository.specification.FindAllMoviesSpecification;
 import com.bycorp.moviemanagement.services.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class MovieServiceImpl implements MovieService {
-    private MovieRepository movieRepository;
+    private final RatingRepository ratingRepository;
+    private final MovieRepository movieRepository;
 
-    @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, RatingRepository ratingRepository) {
         this.movieRepository = movieRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Transactional(readOnly=true)
@@ -39,9 +42,20 @@ public class MovieServiceImpl implements MovieService {
     @Transactional(readOnly = true)
     @Override
     public GetMovieStatistic findOneById(Long id) {
+        int totalRatings = Optional.ofNullable(ratingRepository.countByMovieId(id)).orElse(0);
+        double averageRating = Optional.ofNullable(ratingRepository.avgRatingByMovieId(id)).orElse(0.0);
+        int lowestRating = Optional.ofNullable(ratingRepository.minRatingByMovieId(id)).orElse(0);
+        int highestRating = Optional.ofNullable(ratingRepository.maxRatingByMovieId(id)).orElse(0);
+
         return movieRepository.findById(id)
-                .map(MovieMapper::toGetStatisticDto)
-                .orElseThrow(() -> new ObjectNotFoundException("Película no encontrada"));
+                .map(m -> MovieMapper.toGetStatisticDto(
+                        m,
+                        totalRatings,
+                        averageRating,
+                        lowestRating,
+                        highestRating
+                ))
+                .orElseThrow(() -> new ObjectNotFoundException("Película no encontrada, error al buscar esa pelicula"));
     }
 
 
