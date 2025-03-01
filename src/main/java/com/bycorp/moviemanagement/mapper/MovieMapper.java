@@ -52,21 +52,10 @@ public class MovieMapper {
         oldMovie.setReleaseYear(movieDto.releaseYear());
     }
 
-    public static GetMovieStatistic toGetStatisticDto(Movie movie) {
+    public static GetMovieStatistic toGetStatisticDto(
+            Movie movie, int totalRatings, double averageRating, int lowestRating, int highestRating
+    ) {
         if(movie == null) return null;
-
-        int totalRatings = movie.getRatings() != null ? movie.getRatings().size() : 0;
-
-        int sumaRatings = movie.getRatings() != null ?
-                movie.getRatings().stream().mapToInt(Rating::getRating).sum() : 0;
-
-        int lowestRating = movie.getRatings() != null ?
-                movie.getRatings().stream().map(Rating::getRating).min((Integer::compare)).orElse(0) : 0;
-
-        int highestRating = movie.getRatings() != null ?
-                movie.getRatings().stream().map(Rating::getRating).max((Integer::compare)).orElse(0) : 0;
-
-        double averageRating = movie.getRatings() != null ? (double) sumaRatings / totalRatings : 0;
 
         return new GetMovieStatistic(
                 movie.getId(),
