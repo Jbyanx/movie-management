@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-    Page<User> findAll(String name, Pageable pageable);
 
     Optional<User> findByUsername(String username);
 

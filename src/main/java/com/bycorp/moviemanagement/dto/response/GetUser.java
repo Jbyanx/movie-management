@@ -3,12 +3,11 @@ package com.bycorp.moviemanagement.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.List;
 
 public record GetUser(
         String username,
         String name,
-        List<GetRating> ratings
+        int ratedMovies
 ) implements Serializable {
 
     public static record GetRating(
