@@ -36,7 +36,8 @@ public class User {
     @OneToMany(
             fetch = FetchType.EAGER,
             targetEntity = Rating.class,
-            mappedBy = "user"
+            mappedBy = "user",
+            cascade = {CascadeType.REMOVE} //si elimino un usuario se eliminan sus ratings
     )
     private List<Rating> ratings;
 

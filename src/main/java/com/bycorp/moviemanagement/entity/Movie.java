@@ -41,7 +41,8 @@ public class Movie {
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "movie",
-            targetEntity = Rating.class
+            targetEntity = Rating.class,
+            cascade = {CascadeType.REMOVE}
     )
     private List<Rating> ratings;
 }
