@@ -44,4 +44,9 @@ El backend sigue la **arquitectura en N-capas**, asegurando **separación de res
 
 Se utiliza **JPA Specification** para realizar **búsquedas dinámicas**, permitiendo filtrar entidades según criterios sin escribir múltiples consultas personalizadas.
 
+## 1. Docker run
+docker run --hostname=5d6a3b9195ca --env=POSTGRES_PASSWORD=sebaj --env=POSTGRES_USER=jabes --env=POSTGRES_DB=movie-management-db -d postgres
+
+##2. run aplication
+
 ## 📌 Swagger UI disponible en: http://localhost:9090/api/v1/swagger-ui.html
