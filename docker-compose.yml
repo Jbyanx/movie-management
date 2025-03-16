@@ -4,14 +4,26 @@ services:
   postgres-db:
     image: postgres:15-alpine
     container_name: postgres-movie-db
-    environment:
-      POSTGRES_DB: movie-management-db
-      POSTGRES_USER: jabes
-      POSTGRES_PASSWORD: sebaj
+    env_file:
+      - .env   # ✅ Carga las variables de .env
     ports:
-      - "15432:5432"  # Mapeo del puerto para que tu aplicación pueda acceder a la base de datos
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persistencia de datos
+      - postgres_data:/var/lib/postgresql/data
+
+  movie-api:
+    build: .
+    container_name: movie-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+    env_file:
+      - .env  # ✅ Carga las mismas variables de .env
+    environment:
+      DB_URL: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
 
 volumes:
   postgres_data:
